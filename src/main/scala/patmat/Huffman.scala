@@ -98,7 +98,7 @@ object Huffman {
 
   }
 
-  def times(chars: List[Char]): List[(Char, Int)] = ???
+  def times(chars: List[Char]): List[(Char, Int)] = removeDuplicates ( chars.map( (char: Char) => (char, chars.filter(_==char).length) ))
 
   /**
    * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
