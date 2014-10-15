@@ -81,6 +81,23 @@ object Huffman {
    *       println("integer is  : "+ theInt)
    *   }
    */
+  def removeDuplicates[T](l: List[T]): List[T] = {
+    if (l.isEmpty) l else {
+        val h: T =  l.head
+        if (l.tail.exists(_==h)) removeDuplicates(l.tail) else l.head :: removeDuplicates(l.tail)
+    }
+  }
+
+
+  //TODO: Why doesn't this work?
+  def removeDups[T](l: List[T]) : List[T] = {
+    l match {
+      case List() => l
+      case x::xs => if (xs.exists(_==x)) removeDups(xs) else (x::removeDups(xs))
+    }
+
+  }
+
   def times(chars: List[Char]): List[(Char, Int)] = ???
 
   /**
