@@ -81,14 +81,15 @@ object Huffman {
    *       println("integer is  : "+ theInt)
    *   }
    */
+  /*
   def removeDuplicates[T](l: List[T]): List[T] = {
     if (l.isEmpty) l else {
         val h: T =  l.head
         if (l.tail.exists(_==h)) removeDuplicates(l.tail) else l.head :: removeDuplicates(l.tail)
     }
-  }
+  }*/
 
-
+/*
   //TODO: Why doesn't this work?
   def removeDups[T](l: List[T]) : List[T] = {
     l match {
@@ -97,8 +98,8 @@ object Huffman {
     }
 
   }
-
-  def times(chars: List[Char]): List[(Char, Int)] = removeDuplicates ( chars.map( (char: Char) => (char, chars.filter(_==char).length) ))
+*/
+  def times(chars: List[Char]): List[(Char, Int)] =  ( chars.map( (char: Char) => (char, chars.filter(_==char).length) )).distinct
 
   /**
    * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
