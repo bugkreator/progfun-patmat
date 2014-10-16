@@ -108,12 +108,12 @@ object Huffman {
    * head of the list should have the smallest weight), where the weight
    * of a leaf is the frequency of the character.
    */
-  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = ???
+  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = freqs.sortWith( (p1,p2) => (p1._2<p2._2)).map( {case (a,b)  => new Leaf(a,b) } )
 
   /**
    * Checks whether the list `trees` contains only one single code tree.
    */
-  def singleton(trees: List[CodeTree]): Boolean = ???
+  def singleton(trees: List[CodeTree]): Boolean = {trees.length==1}
 
   /**
    * The parameter `trees` of this function is a list of code trees ordered
@@ -127,7 +127,24 @@ object Huffman {
    * If `trees` is a list of less than two elements, that list should be returned
    * unchanged.
    */
-  def combine(trees: List[CodeTree]): List[CodeTree] = ???
+
+  def merge(first: CodeTree, second: CodeTree): CodeTree =
+  {
+    // assume weight(first) < weight(second)
+    new Fork(first, second, chars(first):::chars(second), weight(first) + weight(second))
+  }
+
+  def combine(trees: List[CodeTree]): List[CodeTree] = {
+    trees match {
+      case first::second::rest => {
+        val merged: CodeTree = merge( first, second)
+        val mergedWeight: Int = weight (merged)
+        val (before, after): (List[CodeTree], List[CodeTree]) = rest.span(weight(_)<mergedWeight) // split the rest according to weight, to find insertion point
+        before:::List(merged):::after
+      }
+      case _ => trees // else, less than 2 elements
+    }
+  }
 
   /**
    * This function will be called in the following way:
