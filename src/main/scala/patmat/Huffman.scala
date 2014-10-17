@@ -186,7 +186,24 @@ object Huffman {
    * This function decodes the bit sequence `bits` using the code tree `tree` and returns
    * the resulting list of characters.
    */
-  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = ???
+
+  def decodeHelper(originalTree: CodeTree, currentTree: CodeTree, bits: List[Bit], acc: List[Char]): List[Char] = {
+    // TODO: Elegantize this
+    bits match {
+      case Nil => currentTree match {
+        case Fork(left, right, _, _) => acc // this should not happen since the last bit should lead us to a leaf
+        case Leaf(char, _) => acc :+ char // last character terminated
+      }
+      case b::bs => currentTree match {
+        case Fork(left, right, _, _) => decodeHelper(originalTree, if (b == 0) left else right, bs, acc) // traverse tree according to value of b
+        case Leaf(char, _) => decodeHelper(originalTree, originalTree, bits, acc:+char) // start at root of original tree, and append the char at the current leaf
+      }
+    }
+  }
+
+  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = {
+    decodeHelper(tree, tree, bits, Nil)
+  }
 
   /**
    * A Huffman coding tree for the French language.
@@ -204,8 +221,7 @@ object Huffman {
   /**
    * Write a function that returns the decoded secret
    */
-  def decodedSecret: List[Char] = ???
-
+  def decodedSecret: List[Char] = decode(frenchCode, secret)
 
 
   // Part 4a: Encoding using Huffman tree
@@ -214,8 +230,28 @@ object Huffman {
    * This function encodes `text` using the code tree `tree`
    * into a sequence of bits.
    */
-  def encode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
 
+  def isCharInTree(tree: CodeTree, c: Char) : Boolean = {
+    tree match {
+      case _ => true
+    }
+  }
+
+  def encodeHelper(originalTree: CodeTree, currentTree: CodeTree, text: List[Char], acc: List[Bit]): List[Bit] = {
+    text match {
+      case Nil => acc
+      case c::cs => {
+        currentTree match {
+          case Leaf(char, _) => encodeHelper(originalTree, originalTree, cs, acc)
+          case Fork(left: CodeTree, right: CodeTree, _, _) =>  if (chars(left).contains(c)) encodeHelper(originalTree, left, text, acc :+ 0) else encodeHelper(originalTree, right, text, acc :+ 1)
+        }
+      }
+    }
+  }
+
+  def encode(tree: CodeTree)(text: List[Char]): List[Bit] = {
+    encodeHelper(tree, tree, text, Nil)
+  }
 
   // Part 4b: Encoding using code table
 
