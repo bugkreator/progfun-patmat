@@ -57,17 +57,27 @@ class HuffmanSuite extends FunSuite {
     }
   }
 
-  def testDecodeEncode(s: String) = test ("decode and encode of " + s) {
+  def testEncodeDecode(s: String) = test ("encode and decode of " + s) {
     new TestTrees {
-      new TestTrees {
-        assert(decode(t, encode(t)(s.toList)) === s.toList)
-      }
+      assert(decode(t, encode(t)(s.toList)) === s.toList)
     }
   }
 
-  testDecodeEncode("EFABA")
-  testDecodeEncode("AGHHGABEF")
-  testDecodeEncode("ABABACCBACBADEFG")
-  testDecodeEncode("")
+  testEncodeDecode("EFABA")
+  testEncodeDecode("AGHHGABEF")
+  testEncodeDecode("ABABACCBACBADEFG")
+  testEncodeDecode("")
+
+  def testQuickEncodeDecode(s: String) = test ("quick encode and decode of " + s) {
+    new TestTrees {
+      assert(decode(t, quickEncode(t)(s.toList)) === s.toList)
+    }
+  }
+
+  testQuickEncodeDecode("EFABA")
+  testQuickEncodeDecode("AGHHGABEF")
+  testQuickEncodeDecode("ABABACCBACBADEFG")
+  testQuickEncodeDecode("")
+
 
 }
